@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { getJokesRandom } from "./api";
 
-function App() {
+export default function App({ handleSubmit = () => {} }) {
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    const fetchText = async () => {
+      const text = await getJokesRandom();
+      setText(text);
+    };
+    fetchText();
+  }, []);
+
+  const handleChange = (event) => {
+    setText(event.target.value);
+  };
+
+  const clearText = () => {
+    setText("");
+    handleSubmit();
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <input value={text} onChange={handleChange} />
+      <button onClick={clearText}>Clear the input</button>
+    </>
   );
 }
-
-export default App;
